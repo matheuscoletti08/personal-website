@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ProjectRow from '../../components/ProjectRow.astro';
+import { projects } from '../../data/projects';
+import { site } from '../../data/site';
+import { getDict, getStaticLangPaths, type Locale } from '../../i18n';
+
+export function getStaticPaths() {
+	return getStaticLangPaths();
+}
+
+const lang = Astro.params.lang as Locale;
+const dict = getDict(lang);
+const total = String(projects.length).padStart(2, '0');
+---
+
+<BaseLayout
+	lang={lang}
+	title={dict.projects.title}
+	description={`${site.name} — ${dict.projects.description}`}
+>
+	<div class="container">
+		<PageHeader
+			kicker={dict.projects.kicker(total)}
+			title={dict.projects.pageTitle}
+			lead={dict.projects.lead}
+		/>
+
+		<ol class="project-list">
+			{projects.map((project, i) => (
+				<li>
+					<ProjectRow project={project} index={i} lang={lang} />
+				</li>
+			))}
+		</ol>
+	</div>
+</BaseLayout>
+
+<style>
+	.project-list {
+		padding-block: 0.5rem clamp(2rem, 5vw, 4rem);
+		border-bottom: 1px solid var(--line);
+	}
+</style>

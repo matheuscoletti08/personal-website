@@ -1,0 +1,78 @@
+---
+import { site } from '../data/site';
+import { getDict, type Locale } from '../i18n';
+
+interface Props {
+	lang: Locale;
+}
+
+const { lang } = Astro.props;
+const dict = getDict(lang);
+---
+
+<footer class="footer">
+	<div class="container">
+		<div class="cta rule-t">
+			<p class="label">{dict.common.footerCtaLabel}</p>
+			<a href={`mailto:${site.email}`} class="cta-link hover-invert">{dict.common.footerCta}</a>
+		</div>
+
+		<div class="bottom rule-t">
+			<span class="label">© {site.year} {site.name}</span>
+			<div class="links">
+				<a href={`mailto:${site.email}`} class="label u-link">{dict.common.email}</a>
+				<a href={site.github} target="_blank" rel="noopener" class="label u-link">{dict.common.github} ↗</a>
+				<a href={site.linkedin} target="_blank" rel="noopener" class="label u-link">{dict.common.linkedin} ↗</a>
+			</div>
+			<a href="#top" class="label u-link">{dict.common.backToTop}</a>
+		</div>
+	</div>
+</footer>
+
+<style>
+	.footer {
+		margin-top: clamp(4rem, 10vw, 9rem);
+	}
+
+	.cta {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		padding-block: clamp(3rem, 8vw, 6rem);
+	}
+
+	.cta-link {
+		align-self: flex-start;
+		max-width: 100%;
+		overflow-wrap: anywhere;
+		font-size: clamp(2rem, 5.5vw, 4.5rem);
+		line-height: 0.95;
+		font-weight: 700;
+		letter-spacing: -0.03em;
+		text-transform: uppercase;
+		padding: 0.1em 0.2em;
+		margin-left: -0.2em;
+	}
+
+	.bottom {
+		display: grid;
+		grid-template-columns: 1fr auto auto;
+		align-items: baseline;
+		column-gap: clamp(1.5rem, 4vw, 3rem);
+		row-gap: 1rem;
+		padding-block: 1.25rem 2rem;
+	}
+
+	.links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 1.5rem;
+	}
+
+	@media (max-width: 900px) {
+		.bottom {
+			grid-template-columns: 1fr;
+			row-gap: 0.9rem;
+		}
+	}
+</style>

@@ -1,0 +1,109 @@
+---
+import type { Project } from '../data/projects';
+import { getDict, type Locale } from '../i18n';
+
+interface Props {
+	project: Project;
+	index: number;
+	lang: Locale;
+}
+
+const { project, index, lang } = Astro.props;
+const dict = getDict(lang);
+const num = String(index + 1).padStart(2, '0');
+---
+
+<a href={project.repo} target="_blank" rel="noopener" class="row rule-t hover-invert">
+	<span class="cell num label" aria-hidden="true">{num}</span>
+	<span class="cell main">
+		<span class="name">{project.title}</span>
+		<span class="desc">{project.description[lang]}</span>
+	</span>
+	<span class="cell tech label">{project.technologies.join(' · ')}</span>
+	<span class="cell year label" aria-hidden="true">{project.year}</span>
+	<span class="cell go label">{dict.common.goToRepo}</span>
+</a>
+
+<style>
+	.row {
+		display: grid;
+		grid-template-columns: 3.5rem minmax(0, 1fr) auto 4.5rem 6rem;
+		column-gap: 1.5rem;
+		align-items: center;
+		padding: 1.4rem 0.25rem;
+	}
+
+	.num {
+		color: var(--mid);
+	}
+
+	.main {
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+		min-width: 0;
+	}
+
+	.name {
+		font-size: clamp(1.25rem, 2.2vw, 1.9rem);
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		line-height: 1.1;
+		text-transform: uppercase;
+	}
+
+	.desc {
+		color: var(--ink-soft);
+		max-width: 52ch;
+	}
+
+	.tech {
+		justify-self: start;
+		color: var(--mid);
+	}
+
+	.year {
+		justify-self: end;
+		text-align: right;
+		color: var(--mid);
+	}
+
+	.go {
+		justify-self: end;
+		text-align: right;
+	}
+
+	.row:hover .num,
+	.row:hover .desc,
+	.row:hover .tech,
+	.row:hover .year {
+		color: var(--invert-soft);
+	}
+
+	@media (max-width: 720px) {
+		.row {
+			grid-template-columns: 2.5rem 1fr;
+			row-gap: 0.6rem;
+			padding-block: 1.5rem;
+		}
+
+		.num {
+			grid-row: 1;
+		}
+
+		.main {
+			grid-column: 2;
+			grid-row: 1;
+		}
+
+		.tech {
+			grid-column: 2;
+			grid-row: 2;
+		}
+
+		.year,
+		.go {
+			display: none;
+		}
+	}
+</style>

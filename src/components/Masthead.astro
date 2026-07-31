@@ -1,0 +1,290 @@
+---
+import { site } from '../data/site';
+import { getDict, localizedPath, stripLocale, type Locale } from '../i18n';
+
+interface Props {
+	lang: Locale;
+}
+
+const { lang } = Astro.props;
+const dict = getDict(lang);
+const currentPath = stripLocale(Astro.url.pathname)?.path ?? '/';
+
+const nav = [
+	{ path: '/', label: dict.nav.index },
+	{ path: '/projects', label: dict.nav.projects },
+	{ path: '/about', label: dict.nav.about },
+];
+
+function isActive(path: string): boolean {
+	if (path === '/') return currentPath === '/';
+	return currentPath === path || currentPath.startsWith(`${path}/`);
+}
+---
+
+<header class="masthead">
+	<div class="container">
+		<div class="topline">
+			<span class="label">{dict.meta.tagline}</span>
+			<span class="label">{site.volume} — {site.year}</span>
+		</div>
+
+		<div class="bar rule-t">
+			<a href={localizedPath('/', lang)} class="wordmark" aria-label={`${site.name} — ${dict.common.ariaHome}`}>
+				{site.wordmark}<span aria-hidden="true">.</span>
+			</a>
+
+			<div class="bar-right">
+				<nav aria-label={dict.common.ariaPrimaryNav}>
+					<ul>
+						{nav.map((item, i) => (
+							<li>
+								<a
+									href={localizedPath(item.path, lang)}
+									class:list={['label', 'nav-link', 'u-link', { active: isActive(item.path) }]}
+									aria-current={isActive(item.path) ? 'page' : undefined}
+								>
+									<span class="num" aria-hidden="true">0{i + 1}</span>
+									{item.label}
+								</a>
+							</li>
+						))}
+						<li>
+							<a
+								href={site.github}
+								target="_blank"
+								rel="noopener"
+								class="label nav-link u-link"
+							>
+								<span class="num" aria-hidden="true">0{nav.length + 1}</span>
+								{dict.nav.github}
+							</a>
+						</li>
+					</ul>
+				</nav>
+
+				<div class="tools">
+					<div class="lang-switch" role="group" aria-label={dict.common.ariaLanguageSwitcher}>
+						{lang === 'en' ? (
+							<span class="label tool active" lang="en" aria-current="true">EN</span>
+						) : (
+							<a class="label tool u-link" href={localizedPath(currentPath, 'en')} lang="en">EN</a>
+						)}
+						<span class="tool-sep" aria-hidden="true">/</span>
+						{lang === 'pt' ? (
+							<span class="label tool active" lang="pt" aria-current="true">PT</span>
+						) : (
+							<a class="label tool u-link" href={localizedPath(currentPath, 'pt')} lang="pt">PT</a>
+						)}
+					</div>
+
+					<button
+						id="theme-toggle"
+						class="tool theme-toggle"
+						type="button"
+						data-dark-label={dict.common.ariaThemeDark}
+						data-light-label={dict.common.ariaThemeLight}
+						aria-label={dict.common.ariaThemeDark}
+					>
+						<svg class="icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+							<circle cx="12" cy="12" r="4.5"></circle>
+							<path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4m11.4-11.4 1.4-1.4"></path>
+						</svg>
+						<svg class="icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+							<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path>
+						</svg>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+
+<script>
+	const toggle = document.getElementById('theme-toggle');
+	const html = document.documentElement;
+
+	function applyLabel() {
+		const dark = html.getAttribute('data-theme') === 'dark';
+		toggle?.setAttribute(
+			'aria-label',
+			dark ? (toggle.dataset.lightLabel ?? '') : (toggle.dataset.darkLabel ?? ''),
+		);
+		toggle?.setAttribute('aria-pressed', String(dark));
+	}
+
+	applyLabel();
+
+	toggle?.addEventListener('click', () => {
+		const dark = html.getAttribute('data-theme') === 'dark';
+		html.setAttribute('data-theme', dark ? 'light' : 'dark');
+		try {
+			localStorage.setItem('theme', dark ? 'light' : 'dark');
+		} catch (e) {}
+		applyLabel();
+	});
+</script>
+
+<style>
+	.topline {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		padding-block: 0.75rem 0.9rem;
+	}
+
+	.bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 2rem;
+		padding-block: 1.25rem 1.5rem;
+	}
+
+	.wordmark {
+		font-size: clamp(1.4rem, 2.4vw, 2rem);
+		font-weight: 800;
+		letter-spacing: -0.02em;
+		text-transform: uppercase;
+		line-height: 1;
+		white-space: nowrap;
+	}
+
+	.wordmark span {
+		color: var(--mid);
+	}
+
+	.bar-right {
+		display: flex;
+		align-items: center;
+		gap: clamp(1.25rem, 2.5vw, 2.25rem);
+	}
+
+	nav ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: clamp(1rem, 3vw, 2.75rem);
+		align-items: baseline;
+	}
+
+	.nav-link {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.5em;
+		padding-block: 0.25rem;
+	}
+
+	.nav-link .num {
+		color: var(--mid);
+	}
+
+	.nav-link.active {
+		text-decoration: underline;
+		text-underline-offset: 4px;
+		text-decoration-thickness: 1px;
+	}
+
+	.tools {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	.lang-switch {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.55rem;
+	}
+
+	.lang-switch .tool {
+		color: var(--mid);
+	}
+
+	.lang-switch .tool.active {
+		color: var(--ink);
+	}
+
+	.tool {
+		display: inline-flex;
+		align-items: center;
+		min-height: 2.75rem;
+	}
+
+	.tool-sep {
+		color: var(--mid);
+	}
+
+	.theme-toggle {
+		justify-content: center;
+		min-width: 2.75rem;
+		padding: 0.5rem;
+		border: 1px solid var(--line);
+		background: transparent;
+		color: var(--ink);
+		cursor: pointer;
+		transition:
+			color 0.18s ease,
+			background-color 0.18s ease,
+			border-color 0.18s ease;
+	}
+
+	.theme-toggle:hover {
+		background-color: var(--ink);
+		border-color: var(--ink);
+		color: var(--paper);
+	}
+
+	.theme-toggle .icon {
+		width: 1rem;
+		height: 1rem;
+	}
+
+	.theme-toggle .moon {
+		display: block;
+	}
+
+	.theme-toggle .sun {
+		display: none;
+	}
+
+	html[data-theme='dark'] .theme-toggle .moon {
+		display: none;
+	}
+
+	html[data-theme='dark'] .theme-toggle .sun {
+		display: block;
+	}
+
+	@media (max-width: 720px) {
+		.topline {
+			display: none;
+		}
+
+		.bar {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 1rem;
+		}
+
+		.bar-right {
+			width: 100%;
+			flex-direction: column;
+			align-items: stretch;
+			gap: 0.75rem;
+		}
+
+		.tools {
+			justify-content: space-between;
+			border-top: 1px solid var(--line);
+			padding-top: 0.85rem;
+		}
+
+		.lang-switch {
+			align-items: center;
+		}
+
+		.nav-link .num {
+			display: none;
+		}
+	}
+</style>

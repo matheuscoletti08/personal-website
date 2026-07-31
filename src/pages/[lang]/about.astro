@@ -1,0 +1,126 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Figure from '../../components/Figure.astro';
+import portrait from '../../assets/portrait.svg';
+import { site } from '../../data/site';
+import { getDict, getStaticLangPaths, type Locale } from '../../i18n';
+
+export function getStaticPaths() {
+	return getStaticLangPaths();
+}
+
+const lang = Astro.params.lang as Locale;
+const dict = getDict(lang);
+const { facts, bio } = dict.about;
+---
+
+<BaseLayout
+	lang={lang}
+	title={dict.about.title}
+	description={`${site.name} — ${dict.about.description}`}
+>
+	<div class="container">
+		<PageHeader
+			kicker={dict.about.kicker}
+			title={dict.about.pageTitle}
+			lead={dict.about.lead}
+		/>
+
+		<section class="grid bio">
+			<div class="portrait">
+				<Figure src={portrait} alt={`Portrait of ${site.name}`} caption={dict.about.portraitCaption} />
+			</div>
+
+			<div class="bio-text">
+				{bio.map((paragraph) => (
+					<p class="body-prose">{paragraph}</p>
+				))}
+			</div>
+		</section>
+
+		<section class="facts">
+			<div class="section-head rule-t">
+				<h2 class="h2">{dict.about.indexCard}</h2>
+				<span class="label">{dict.about.indexCardTag}</span>
+			</div>
+
+			<dl class="facts-list">
+				{facts.map((fact) => (
+					<div class="fact-item rule-t">
+						<dt class="label">{fact.key}</dt>
+						<dd>{fact.value}</dd>
+					</div>
+				))}
+			</dl>
+		</section>
+	</div>
+</BaseLayout>
+
+<style>
+	.bio {
+		align-items: start;
+		padding-block: 1rem clamp(3rem, 6vw, 5rem);
+	}
+
+	.portrait {
+		grid-column: 1 / 6;
+	}
+
+	.bio-text {
+		grid-column: 7 / 13;
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		padding-top: 1rem;
+	}
+
+	.facts {
+		padding-bottom: clamp(2rem, 5vw, 4rem);
+	}
+
+	.section-head {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 1rem;
+		padding-block: 1.1rem 1.5rem;
+	}
+
+	.facts-list {
+		padding-bottom: 2rem;
+	}
+
+	.fact-item {
+		display: grid;
+		grid-template-columns: 3fr 9fr;
+		gap: 1rem;
+		padding-block: 1.1rem;
+	}
+
+	.fact-item:last-child {
+		border-bottom: 1px solid var(--line);
+	}
+
+	.fact-item dt {
+		color: var(--mid);
+	}
+
+	.fact-item dd {
+		margin: 0;
+		font-size: var(--body);
+		max-width: var(--measure);
+	}
+
+	@media (max-width: 900px) {
+		.portrait,
+		.bio-text {
+			grid-column: 1 / 13;
+		}
+
+		.fact-item {
+			grid-template-columns: 1fr;
+			gap: 0.25rem;
+		}
+	}
+</style>

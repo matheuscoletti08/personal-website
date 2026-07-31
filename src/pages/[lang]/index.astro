@@ -1,0 +1,221 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectRow from '../../components/ProjectRow.astro';
+import { projects } from '../../data/projects';
+import { site } from '../../data/site';
+import { getDict, getStaticLangPaths, localizedPath, type Locale } from '../../i18n';
+
+export function getStaticPaths() {
+	return getStaticLangPaths();
+}
+
+const lang = Astro.params.lang as Locale;
+const dict = getDict(lang);
+const { stack } = dict.home;
+---
+
+<BaseLayout
+	lang={lang}
+	title={dict.home.title}
+	description={`${site.name} — ${dict.home.description}`}
+>
+	<section class="hero">
+		<div class="container">
+			<div class="grid hero-grid">
+				<div class="hero-main">
+					<h1 class="display hero-name">{dict.home.name}</h1>
+				</div>
+
+				<aside class="hero-aside">
+					<p class="role h2">{dict.home.role}</p>
+					<p class="mono focus">{dict.home.focus}</p>
+					<p class="body-prose intro">{dict.home.intro}</p>
+					<div class="links">
+						<a href={site.github} target="_blank" rel="noopener" class="label u-link">
+							{dict.common.github} ↗
+						</a>
+						<a href={site.linkedin} target="_blank" rel="noopener" class="label u-link">
+							{dict.common.linkedin} ↗
+						</a>
+						<a href={`mailto:${site.email}`} class="label u-link">
+							{dict.common.email}
+						</a>
+					</div>
+				</aside>
+			</div>
+
+			<div class="hero-foot rule-t">
+				<span class="label">{dict.meta.tagline}</span>
+				<span class="label">{dict.home.archive} {site.volume}</span>
+			</div>
+		</div>
+	</section>
+
+	<section class="works">
+		<div class="container">
+			<div class="section-head rule-t">
+				<h2 class="h2">{dict.home.worksTitle}</h2>
+				<span class="label">{dict.home.worksTag}</span>
+			</div>
+
+			{projects.map((project, i) => <ProjectRow project={project} index={i} lang={lang} />)}
+
+			<div class="more rule-t">
+				<a href={localizedPath('/projects', lang)} class="label u-link">{dict.home.viewAll}</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="stack">
+		<div class="container">
+			<div class="section-head rule-t">
+				<h2 class="h2">{dict.home.stackTitle}</h2>
+				<span class="label">{dict.home.stackTag}</span>
+			</div>
+
+			<div class="grid stack-list">
+				{stack.map((item, i) => (
+					<div class="stack-item">
+						<p class="label num" aria-hidden="true">0{i + 1}</p>
+						<h3 class="h2 stack-title">{item.title}</h3>
+						<p class="mono stack-items">{item.items}</p>
+					</div>
+				))}
+			</div>
+		</div>
+	</section>
+</BaseLayout>
+
+<style>
+	.hero {
+		padding-block: clamp(3rem, 7vw, 5.5rem) 0;
+	}
+
+	.hero-grid {
+		align-items: end;
+	}
+
+	.hero-main {
+		grid-column: 1 / 9;
+	}
+
+	.hero-name {
+		text-transform: uppercase;
+		line-height: 0.9;
+	}
+
+	.hero-aside {
+		grid-column: 10 / 13;
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+		padding-bottom: 0.5rem;
+	}
+
+	.role {
+		font-size: clamp(1.4rem, 2.4vw, 2rem);
+		text-transform: uppercase;
+		line-height: 1.1;
+	}
+
+	.focus {
+		font-size: clamp(1rem, 1.4vw, 1.25rem);
+		color: var(--mid);
+	}
+
+	.intro {
+		max-width: 46ch;
+	}
+
+	.links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 1.5rem;
+		margin-top: 0.5rem;
+	}
+
+	.hero-foot {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-top: clamp(3rem, 6vw, 5rem);
+		padding-block: 0.9rem 1.25rem;
+	}
+
+	.works {
+		padding-block: clamp(4rem, 9vw, 8rem) 0;
+	}
+
+	.section-head {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 1rem;
+		padding-block: 1.1rem 1.5rem;
+	}
+
+	.more {
+		display: flex;
+		justify-content: flex-end;
+		padding-block: 1.4rem 0.5rem;
+	}
+
+	.stack {
+		padding-top: clamp(4rem, 9vw, 8rem);
+	}
+
+	.stack-list {
+		padding-block: 0.5rem;
+	}
+
+	.stack-item {
+		grid-column: span 4;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		padding: 1.5rem 0 2.5rem;
+	}
+
+	.stack-item + .stack-item {
+		border-left: 1px solid var(--line);
+		padding-left: clamp(1.5rem, 2.5vw, 2.5rem);
+	}
+
+	.stack-title {
+		font-size: clamp(1.25rem, 2vw, 1.75rem);
+		text-transform: uppercase;
+	}
+
+	.stack-items {
+		font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+		line-height: 1.7;
+	}
+
+	@media (max-width: 900px) {
+		.hero-main {
+			grid-column: 1 / 13;
+		}
+
+		.hero-aside {
+			grid-column: 1 / 13;
+			margin-top: 2rem;
+		}
+
+		.stack-item,
+		.stack-item + .stack-item {
+			grid-column: 1 / 13;
+			border-left: 0;
+			padding-left: 0;
+			border-top: 1px solid var(--line);
+			padding-top: 1.5rem;
+		}
+	}
+
+	@media (max-width: 720px) {
+		.hero-foot {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.5rem;
+		}
+	}
+</style>
