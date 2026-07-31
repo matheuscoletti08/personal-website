@@ -12,10 +12,4 @@ export default defineConfig({
 			redirectToDefaultLocale: false,
 		},
 	},
-
-	redirects: {
-		'/': '/pt',
-		'/projects': '/pt/projects',
-		'/about': '/pt/about',
-	},
 });
