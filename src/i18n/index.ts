@@ -12,16 +12,18 @@ export function getDict(locale: Locale): Dictionary {
 	return dictionaries[locale] ?? dictionaries[defaultLocale];
 }
 
-const localePattern = new RegExp(`^/(${locales.join('|')})(?:/(.*))?$`);
-
 export function stripLocale(pathname: string): { lang: Locale; path: string } | null {
-	const match = localePattern.exec(pathname);
-	if (!match) return null;
-	return { lang: match[1] as Locale, path: match[2] ? `/${match[2]}` : '/' };
+	const home = /^\/(en|pt)$/.exec(pathname);
+	if (home) return { lang: home[1] as Locale, path: '/' };
+	const page = /^\/([^/]+)\/(en|pt)$/.exec(pathname);
+	if (page) return { lang: page[2] as Locale, path: `/${page[1]}` };
+	return null;
 }
 
 export function localizedPath(path: string, lang: Locale): string {
-	return `/${lang}${path === '/' ? '' : path}`;
+	const base = (import.meta.env.BASE_URL ?? '').replace(/\/?$/, '/');
+	if (path === '/') return `${base}${lang}`;
+	return `${base}${path.replace(/^\//, '')}/${lang}`;
 }
 
 export function getLangFromPath(pathname: string): Locale {
