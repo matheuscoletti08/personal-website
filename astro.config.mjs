@@ -1,8 +1,9 @@
-// @ts-check
 import { defineConfig } from 'astro/config';
 
-// https://astro.build/config
 export default defineConfig({
+	site: 'https://matheuscoletti08.github.io',
+	base: '/personal-website',
+
 	i18n: {
 		defaultLocale: 'pt',
 		locales: ['en', 'pt'],
@@ -11,6 +12,7 @@ export default defineConfig({
 			redirectToDefaultLocale: false,
 		},
 	},
+
 	redirects: {
 		'/': '/pt',
 		'/projects': '/pt/projects',
