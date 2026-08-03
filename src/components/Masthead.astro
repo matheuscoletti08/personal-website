@@ -14,7 +14,6 @@ const pathname = Astro.url.pathname.startsWith(base)
 	: Astro.url.pathname;
 const currentPath = stripLocale(pathname)?.path ?? '/';
 const browserLang = getBrowserLocale();
-const showLang = lang === 'undefined' ? browserLang : lang;
 
 const nav = [
 	{ path: '/', label: dict.nav.index },
