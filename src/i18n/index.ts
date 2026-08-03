@@ -15,7 +15,7 @@ export function getDict(locale: Locale): Dictionary {
 export function stripLocale(pathname: string): { lang: Locale; path: string } | null {
 	const base = (import.meta.env.BASE_URL ?? '').replace(/\/?$/, '/');
 	if (pathname.startsWith(base)) {
-		pathname = pathname.slice(base.length);
+		pathname = '/' + pathname.slice(base.length).replace(/^\/+/, '');
 	}
 	const home = /^\/(en|pt)\/?$/.exec(pathname);
 	if (home) return { lang: home[1] as Locale, path: '/' };
