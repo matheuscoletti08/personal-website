@@ -13,9 +13,13 @@ export function getDict(locale: Locale): Dictionary {
 }
 
 export function stripLocale(pathname: string): { lang: Locale; path: string } | null {
-	const home = /^\/(en|pt)$/.exec(pathname);
+	const base = (import.meta.env.BASE_URL ?? '').replace(/\/?$/, '/');
+	if (pathname.startsWith(base)) {
+		pathname = pathname.slice(base.length);
+	}
+	const home = /^\/(en|pt)\/?$/.exec(pathname);
 	if (home) return { lang: home[1] as Locale, path: '/' };
-	const page = /^\/([^/]+)\/(en|pt)$/.exec(pathname);
+	const page = /^\/([^/]+)\/(en|pt)\/?$/.exec(pathname);
 	if (page) return { lang: page[2] as Locale, path: `/${page[1]}` };
 	return null;
 }
@@ -32,4 +36,14 @@ export function getLangFromPath(pathname: string): Locale {
 
 export function getStaticLangPaths() {
 	return locales.map((lang) => ({ params: { lang } }));
+}
+
+export function getBrowserLocale(): Locale {
+	const nav = navigator.language || (navigator as any).userLanguage;
+	if (!nav) return defaultLocale;
+	const lower = nav.toLowerCase();
+	for (const l of locales) {
+		if (lower.startsWith(l)) return l;
+	}
+	return defaultLocale;
 }
