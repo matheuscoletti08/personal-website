@@ -1,6 +1,6 @@
 ---
 import { site } from '../data/site';
-import { getDict, localizedPath, stripLocale, type Locale, locales, defaultLocale, getBrowserLocale } from '../i18n';
+import { getDict, localizedPath, stripLocale, type Locale } from '../i18n';
 
 interface Props {
 	lang: Locale;
@@ -13,7 +13,6 @@ const pathname = Astro.url.pathname.startsWith(base)
 	? Astro.url.pathname.slice(base.length - 1)
 	: Astro.url.pathname;
 const currentPath = stripLocale(pathname)?.path ?? '/';
-const browserLang = getBrowserLocale();
 
 const nav = [
 	{ path: '/', label: dict.nav.index },
@@ -24,16 +23,6 @@ const nav = [
 function isActive(path: string): boolean {
 	if (path === '/') return currentPath === '/';
 	return currentPath === path || currentPath.startsWith(`${path}/`);
-}
-
-function getBrowserLocale(): Locale {
-	const nav = navigator.language || (navigator as any).userLanguage;
-	if (!nav) return defaultLocale;
-	const lower = nav.toLowerCase();
-	for (const l of locales) {
-		if (lower.startsWith(l)) return l;
-	}
-	return defaultLocale;
 }
 ---
 
@@ -81,15 +70,15 @@ function getBrowserLocale(): Locale {
 				<div class="tools">
 					<div class="lang-switch" role="group" aria-label={dict.common.ariaLanguageSwitcher}>
 						{lang === 'en' ? (
-							<span class="label tool active" lang="en" aria-current="true">EN</span>
+							<span class="label tool active" lang="en" aria-current="true">EN-US</span>
 						) : (
-							<a class="label tool u-link" href={localizedPath(currentPath, 'en')} lang="en">EN</a>
+							<a class="label tool u-link" href={localizedPath(currentPath, 'en')} lang="en">EN-US</a>
 						)}
 						<span class="tool-sep" aria-hidden="true">/</span>
 						{lang === 'pt' ? (
-							<span class="label tool active" lang="pt" aria-current="true">PT</span>
+							<span class="label tool active" lang="pt" aria-current="true">PT-BR</span>
 						) : (
-							<a class="label tool u-link" href={localizedPath(currentPath, 'pt')} lang="pt">PT</a>
+							<a class="label tool u-link" href={localizedPath(currentPath, 'pt')} lang="pt">PT-BR</a>
 						)}
 					</div>
 
