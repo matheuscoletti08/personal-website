@@ -22,7 +22,7 @@ const pageDescription = description ?? `${site.name} — ${dict.meta.tagline}.`;
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} translate="no">
 	<head>
 		<script is:inline>
 			(function () {
@@ -42,6 +42,7 @@ const pageDescription = description ?? `${site.name} — ${dict.meta.tagline}.`;
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL.replace(/\/?$/, '/')}favicon.svg`} />
+		<meta name="google" content="notranslate" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={pageDescription} />
 		<title>{pageTitle}</title>
