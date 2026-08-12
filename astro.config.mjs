@@ -1,7 +1,9 @@
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-	site: 'https://matheuscoletti.is-a.dev',
+	site: 'https://coletti.is-a.dev',
+	integrations: [sitemap()],
 
 	i18n: {
 		defaultLocale: 'pt',
