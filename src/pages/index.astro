@@ -1,12 +1,28 @@
 ---
-import { locales, defaultLocale } from '../i18n';
+import { defaultLocale, getDict, locales } from '../i18n';
+import { site } from '../data/site';
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const fallback = defaultLocale;
+const dict = getDict(fallback);
+const target = `${site.url}/${fallback}/`;
 ---
 
-<meta http-equiv="refresh" content={`0; url=${base}${fallback}/`} />
-<script define:vars={{ base, locales, fallback }}>
-	const lang = (navigator.language ?? '').toLowerCase();
-	const matched = locales.find((l) => lang.startsWith(l));
-	window.location.replace(`${base}${matched ?? fallback}/`);
-</script>
+<!doctype html>
+<html lang={fallback} translate="no">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={`${site.fullName} — ${dict.home.description}`} />
+		<title>{site.name} — {dict.meta.role}</title>
+		<link rel="canonical" href={target} />
+		<meta http-equiv="refresh" content={`0; url=${target}`} />
+		<script is:inline define:vars={{ base, locales, fallback }}>
+			const lang = (navigator.language ?? '').toLowerCase();
+			const matched = locales.find((l) => lang.startsWith(l));
+			window.location.replace(`${base}${matched ?? fallback}/`);
+		</script>
+	</head>
+	<body>
+		<p><a href={target}>{site.name}</a></p>
+	</body>
+</html>

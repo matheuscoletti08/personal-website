@@ -16,14 +16,14 @@ const { stack } = dict.home;
 
 <BaseLayout
 	lang={lang}
-	title={dict.home.title}
-	description={`${site.name} — ${dict.home.description}`}
+	website
+	description={`${site.fullName} — ${dict.home.description}`}
 >
 	<section class="hero">
 		<div class="container">
 			<div class="grid hero-grid">
 				<div class="hero-main">
-					<h1 class="display hero-name">{dict.home.name}</h1>
+					<h1 class="display hero-name">{dict.home.name}<span class="dot" aria-hidden="true">.</span></h1>
 				</div>
 
 				<aside class="hero-aside">
@@ -46,7 +46,6 @@ const { stack } = dict.home;
 
 			<div class="hero-foot rule-t">
 				<span class="label">{dict.meta.tagline}</span>
-				<span class="label">{dict.home.archive} {site.volume}</span>
 			</div>
 		</div>
 	</section>
@@ -102,6 +101,10 @@ const { stack } = dict.home;
 	.hero-name {
 		text-transform: uppercase;
 		line-height: 0.9;
+	}
+
+	.hero-name .dot {
+		color: var(--mid);
 	}
 
 	.hero-aside {
