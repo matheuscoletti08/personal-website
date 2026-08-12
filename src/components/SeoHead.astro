@@ -1,0 +1,45 @@
+---
+import { site } from '../data/site';
+import { getDict, type Locale } from '../i18n';
+
+interface Props {
+	lang: Locale;
+	url: string;
+	website?: boolean;
+}
+
+const { lang, url, website = false } = Astro.props;
+const dict = getDict(lang);
+
+const person = {
+	'@type': 'Person',
+	name: site.fullName,
+	alternateName: site.alternateNames,
+	givenName: site.givenName,
+	additionalName: site.additionalName,
+	familyName: site.familyName,
+	url: site.url,
+	image: `${site.url}/og.png`,
+	email: site.email,
+	jobTitle: dict.meta.role,
+	address: {
+		'@type': 'PostalAddress',
+		addressLocality: 'São Paulo',
+		addressCountry: 'BR',
+	},
+	sameAs: [site.github, site.linkedin],
+};
+
+const webSite = {
+	'@type': 'WebSite',
+	name: `${site.name} — ${dict.meta.tagline}`,
+	alternateName: site.alternateNames,
+	url: url,
+	inLanguage: ['pt-BR', 'en-US'],
+	author: person,
+};
+
+const graph = { '@context': 'https://schema.org', '@graph': website ? [webSite, person] : [person] };
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(graph)} />
