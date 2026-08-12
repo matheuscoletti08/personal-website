@@ -28,7 +28,7 @@ export const en: Dictionary = {
 	home: {
 		title: 'Index',
 		description: 'software development student interested in cloud, Linux and open source.',
-		name: 'Matheus Coletti.',
+		name: 'Matheus Coletti',
 		role: 'Software Development Student',
 		focus: 'cloud • linux • open source',
 		intro: 'I build software while learning how the systems behind it work.',
@@ -60,7 +60,7 @@ export const en: Dictionary = {
 		pageTitle: 'About.',
 		lead: 'Software development student from São Paulo — I build small tools and study how the systems behind them run.',
 		bio: [
-			'I’m a software development student in São Paulo. I started with web development in school — HTML, CSS and a bit of JavaScript, building pages for school projects. That led me to a technical course in systems development at ETEC, and later to a web development course at IOS, where I learned to put together a small web application end to end.',
+			'I’m Matheus Marques Coletti, a software development student in São Paulo. I started with web development in school — HTML, CSS and a bit of JavaScript, building pages for school projects. That led me to a technical course in systems development at ETEC, and later to a web development course at IOS, where I learned to put together a small web application end to end.',
 			'Linux came next. What started as a way to make an old laptop faster turned into real curiosity about how a computer works — processes, the kernel, Wayland, networking. Linux has been my daily driver since then, and it’s the thing I’ve learned the most from.',
 			'Most of my projects come from problems I actually ran into. I wrote an Android web server that exposes a Sony camera’s filesystem over HTTP, because getting the photos off the camera was painful. I built a low-latency auto-clicker for Wayland, because the tools I found didn’t work well. And a coloured flash in the browser, just to see if the camera API could do it.',
 			'Right now I’m studying cloud infrastructure — Linux, networking, Docker and Google Cloud — and how services move from a laptop to something that actually runs. Outside of code, I like photography and design; both are about composition and attention to detail, which is also how I try to think about interfaces.',
@@ -69,9 +69,10 @@ export const en: Dictionary = {
 		indexCard: 'Index card',
 		indexCardTag: 'Biographical notes',
 		facts: [
+			{ key: 'Full name', value: 'Matheus Marques Coletti' },
 			{ key: 'Location', value: 'São Paulo — SP, Brazil' },
 			{ key: 'Education', value: 'Systems Development — ETEC · Web Development — IOS' },
-			{ key: 'Environment', value: 'Linux (Wayland) as a daily driver' },
+			{ key: 'Environment', value: 'Linux (X11) as a daily driver' },
 			{ key: 'Currently', value: 'Learning cloud infrastructure — networking, Docker, GCP' },
 			{
 				key: 'Interests',

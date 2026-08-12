@@ -34,6 +34,10 @@ export function getLangFromPath(pathname: string): Locale {
 	return stripLocale(pathname)?.lang ?? defaultLocale;
 }
 
+export function getPagePath(pathname: string): string {
+	return stripLocale(pathname)?.path ?? '/';
+}
+
 export function getStaticLangPaths() {
 	return locales.map((lang) => ({ params: { lang } }));
 }
