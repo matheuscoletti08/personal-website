@@ -6,19 +6,33 @@ import '../styles/global.css';
 
 import Masthead from '../components/Masthead.astro';
 import Footer from '../components/Footer.astro';
+import SeoHead from '../components/SeoHead.astro';
 import { site } from '../data/site';
-import { getDict, type Locale } from '../i18n';
+import { defaultLocale, getDict, getPagePath, localizedPath, locales, type Locale } from '../i18n';
 
 interface Props {
 	lang: Locale;
 	title?: string;
 	description?: string;
+	website?: boolean;
 }
 
-const { lang, title, description } = Astro.props;
+const { lang, title, description, website = false } = Astro.props;
 const dict = getDict(lang);
-const pageTitle = title ? `${title} — ${site.name}` : `${dict.meta.tagline} — ${site.name}`;
+const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${dict.meta.role}`;
 const pageDescription = description ?? `${site.name} — ${dict.meta.tagline}.`;
+
+const pagePath = getPagePath(Astro.url.pathname);
+const canonical = new URL(localizedPath(pagePath, lang), site.url).href;
+const xDefault = new URL(localizedPath('/', defaultLocale), site.url).href;
+const alternates = locales.map((l) => ({
+	lang: l,
+	href: new URL(localizedPath(pagePath, l), site.url).href,
+}));
+
+const ogLocale = lang === 'pt' ? 'pt_BR' : 'en_US';
+const ogLocaleAlternate = lang === 'pt' ? 'en_US' : 'pt_BR';
+const ogImage = `${site.url}/og.png`;
 ---
 
 <!doctype html>
@@ -44,8 +58,30 @@ const pageDescription = description ?? `${site.name} — ${dict.meta.tagline}.`;
 		<link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL.replace(/\/?$/, '/')}favicon.svg`} />
 		<meta name="google" content="notranslate" />
 		<meta name="generator" content={Astro.generator} />
+		<meta name="author" content={site.fullName} />
 		<meta name="description" content={pageDescription} />
 		<title>{pageTitle}</title>
+		<link rel="canonical" href={canonical} />
+		<link rel="alternate" hreflang="x-default" href={xDefault} />
+		{alternates.map((alt) => <link rel="alternate" hreflang={alt.lang} href={alt.href} />)}
+
+		<meta property="og:site_name" content={site.name} />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={pageDescription} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:locale" content={ogLocale} />
+		<meta property="og:locale:alternate" content={ogLocaleAlternate} />
+
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={pageTitle} />
+		<meta name="twitter:description" content={pageDescription} />
+		<meta name="twitter:image" content={ogImage} />
+
+		<SeoHead lang={lang} url={canonical} website={website} />
 	</head>
 	<body id="top">
 		<Masthead lang={lang} />
