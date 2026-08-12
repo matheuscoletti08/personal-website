@@ -13,12 +13,15 @@ const dict = getDict(lang);
 <footer class="footer">
 	<div class="container">
 		<div class="cta rule-t">
-			<p class="label">{dict.common.footerCtaLabel}</p>
+			<div class="cta-labels">
+				<p class="label">{dict.common.footerCtaLabel}</p>
+				<span class="label">{dict.home.archive} {site.volume}</span>
+			</div>
 			<a href={`mailto:${site.email}`} class="cta-link hover-invert">{dict.common.footerCta}</a>
 		</div>
 
 		<div class="bottom rule-t">
-			<span class="label">© {site.year} {site.name}</span>
+			<span class="label">© {site.year} {site.fullName}</span>
 			<div class="links">
 				<a href={`mailto:${site.email}`} class="label u-link">{dict.common.email}</a>
 				<a href={site.github} target="_blank" rel="noopener" class="label u-link">{dict.common.github} ↗</a>
@@ -39,6 +42,17 @@ const dict = getDict(lang);
 		flex-direction: column;
 		gap: 1.5rem;
 		padding-block: clamp(3rem, 8vw, 6rem);
+	}
+
+	.cta-labels {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 1rem;
+	}
+
+	.cta-labels span {
+		text-align: right;
 	}
 
 	.cta-link {
