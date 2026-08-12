@@ -28,12 +28,7 @@ function isActive(path: string): boolean {
 
 <header class="masthead">
 	<div class="container">
-		<div class="topline">
-			<span class="label">{dict.meta.tagline}</span>
-			<span class="label">{site.volume} — {site.year}</span>
-		</div>
-
-		<div class="bar rule-t">
+		<div class="bar">
 			<a href={localizedPath('/', lang)} class="wordmark" aria-label={`${site.name} — ${dict.common.ariaHome}`}>
 				{site.wordmark}<span aria-hidden="true">.</span>
 			</a>
@@ -129,14 +124,7 @@ function isActive(path: string): boolean {
 	});
 </script>
 
-<style>
-	.topline {
-		display: flex;
-		justify-content: space-between;
-		gap: 1rem;
-		padding-block: 0.75rem 0.9rem;
-	}
-
+<style is:global>
 	.bar {
 		display: flex;
 		align-items: center;
@@ -259,10 +247,6 @@ function isActive(path: string): boolean {
 	}
 
 	@media (max-width: 720px) {
-		.topline {
-			display: none;
-		}
-
 		.bar {
 			flex-direction: column;
 			align-items: flex-start;
